@@ -1,14 +1,14 @@
 package com.itu.tourisme;
 
 public class ListeDestination {
-    private int imageResId;
+    private String imageResId;
     private String title;
     private String description;
     private String details;
     private String prix;
     private String telephone;
 
-    public ListeDestination(int imageResId, String title, String description, String details, String prix, String telephone) {
+    public ListeDestination(String imageResId, String title, String description, String details, String prix, String telephone) {
         this.imageResId = imageResId;
         this.title = title;
         this.description = description;
@@ -17,11 +17,11 @@ public class ListeDestination {
         this.telephone = telephone;
     }
 
-    public int getImageResId() {
+    public String getImageResId() {
         return imageResId;
     }
 
-    public void setImageResId(int imageResId) {
+    public void setImageResId(String imageResId) {
         this.imageResId = imageResId;
     }
 

@@ -21,7 +21,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    // Méthode pour activer/désactiver les notifications
     public boolean areNotificationsEnabled() {
         return appPreferences.isNotificationEnabled();
     }

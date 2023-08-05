@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListeAdapter extends RecyclerView.Adapter<ListeAdapter.ViewHolder> {
@@ -34,18 +35,20 @@ public class ListeAdapter extends RecyclerView.Adapter<ListeAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ListeDestination destination = destinationList.get(position);
-        holder.imageView.setImageResource(destination.getImageResId());
+        AfficheImageUrl afficheImageUrl = new AfficheImageUrl();
+        afficheImageUrl.loadImage(destination.getImageResId(), holder.imageView);
+        System.out.println("imaage="+destination.getImageResId());
         holder.titleTextView.setText(destination.getTitle());
         holder.descriptionTextView.setText(destination.getDescription());
 
         holder.cardView.setOnClickListener(v -> {
-            // Lorsque l'utilisateur clique sur un élément, ouvre le fragment de détails.
+
             FragmentManager fragmentManager = ((AppCompatActivity) v.getContext()).getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
             DetailsFragment detailsFragment = new DetailsFragment();
             Bundle args = new Bundle();
-            args.putInt("imageResId", destination.getImageResId());
+            args.putString("image",destination.getImageResId());
             args.putString("title", destination.getTitle());
             args.putString("description", destination.getDescription());
             args.putString("details", destination.getDetails());
@@ -77,5 +80,10 @@ public class ListeAdapter extends RecyclerView.Adapter<ListeAdapter.ViewHolder> 
             descriptionTextView = itemView.findViewById(R.id.item_description);
             cardView = itemView.findViewById(R.id.mainLayout);
         }
+    }
+
+    public void filterList(ArrayList<ListeDestination> filteredList) {
+        destinationList = filteredList;
+        notifyDataSetChanged();
     }
 }

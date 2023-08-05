@@ -60,12 +60,11 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_details, container, false);
 
         Bundle args = getArguments();
         if (args != null) {
-            int imageResId = args.getInt("imageResId", 0);
+            String imageResId = args.getString("image");
             String title = args.getString("title");
             String description = args.getString("description");
             String details = args.getString("details");
@@ -80,7 +79,9 @@ public class DetailsFragment extends Fragment {
             TextView prixTextView = view.findViewById(R.id.prix_text_view);
             TextView telephoneTextView = view.findViewById(R.id.telephone_text_view);
 
-            imageView.setImageResource(imageResId);
+            AfficheImageUrl afficheImageUrl = new AfficheImageUrl();
+            afficheImageUrl.loadImage(imageResId,imageView);
+            
             titleTextView.setText(title);
             descriptionTextView.setText(description);
             detailsTextView.setText(details);

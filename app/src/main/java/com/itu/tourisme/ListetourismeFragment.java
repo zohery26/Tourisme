@@ -7,12 +7,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +37,8 @@ public class ListetourismeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
 
     public ListetourismeFragment() {
         // Required empty public constructor
@@ -61,24 +71,75 @@ public class ListetourismeFragment extends Fragment {
         }
     }
 
-    private List<ListeDestination> destinationList;
+    private List<ListeDestination> destinationList = new ArrayList<>();
     private RecyclerView recyclerView;
+    private ListeAdapter listeAdapter;
+    private EditText searchEditText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_listetourisme, container, false);
-
-        destinationList = new ArrayList<>();
-        destinationList.add(new ListeDestination(R.drawable.splash, "Titre 1", "Description 1", "Détails 1", "prix", "0325555555"));
-        destinationList.add(new ListeDestination(R.drawable.splash, "Titre 2", "Description 2", "Détails 2", "prix", "0326666666"));
-        // Ajoutez d'autres éléments si nécessaire.
 
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new ListeAdapter(destinationList));
+        listeAdapter = new ListeAdapter(destinationList);
+        recyclerView.setAdapter(listeAdapter);
+
+        //Get destinations
+        ApiService apiService = RetrofitClient.getInstance().create(ApiService.class);
+        Call<List<ListeDestination>> call = apiService.getItems();
+        call.enqueue(new Callback<List<ListeDestination>>() {
+            @Override
+            public void onResponse(Call<List<ListeDestination>> call, Response<List<ListeDestination>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    destinationList.addAll(response.body());
+                    listeAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ListeDestination>> call, Throwable t) {
+                Toast.makeText(getActivity(), "Erreur lors de la récupération des données", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        searchEditText = view.findViewById(R.id.edittext);
+
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
+            }
+        });
 
         return view;
     }
+
+    public void filter(String text) {
+        ArrayList<ListeDestination> listeDestinationsFiltre = new ArrayList<>();
+
+        for (ListeDestination listeDestination : destinationList) {
+            String description = listeDestination.getDescription();
+            String title = listeDestination.getTitle();
+
+            if ((description != null && description.toLowerCase().contains(text.toLowerCase()))
+                    || (title != null && title.toLowerCase().contains(text.toLowerCase()))) {
+                listeDestinationsFiltre.add(listeDestination);
+            }
+        }
+
+        listeAdapter.filterList(listeDestinationsFiltre);
+    }
+
 }
