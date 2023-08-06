@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class InscriptionActivity extends AppCompatActivity {
 
-    private static final String NODEJS_WEBSERVICE_URL = "http://madatourismeitu.alwaysdata.net/inscription";
+    private static final String NODEJS_WEBSERVICE_URL = "https://madatourismeitu.alwaysdata.net/inscription";
     EditText editTextUsername, editTextEmail, editTextPassword, editTextConfirmPassword;
 
     @Override

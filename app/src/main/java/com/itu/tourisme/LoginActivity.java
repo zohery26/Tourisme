@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            String loginUrl = "http://madatourismeitu.alwaysdata.net/connexion";
+            String loginUrl = "https://madatourismeitu.alwaysdata.net/connexion";
 
             String email = params[0];
             String password = params[1];
